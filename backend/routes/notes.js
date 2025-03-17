@@ -2,13 +2,8 @@ const express = require("express");
 const { body, validationResult } = require("express-validator");
 const fetchuser = require("../middleware/fetchuser");
 const Notes = require("../models/Notes");
-
 const router = express.Router();
 
-// ✅ Route: Fetch all notes of logged-in user
-// ✅ Method: GET
-// ✅ Endpoint: "/api/auth/fetchallnotes"
-// ✅ Access: Login required
 router.get("/fetchallnotes", fetchuser, async (req, res) => {
   try {
     const notes = await Notes.find({ user: req.user.id });
@@ -19,16 +14,15 @@ router.get("/fetchallnotes", fetchuser, async (req, res) => {
   }
 });
 
-// ✅ Route: Add a new note
-// ✅ Method: POST
-// ✅ Endpoint: "/api/auth/addnote"
-// ✅ Access: Login required
 router.post(
   "/addnote",
   fetchuser,
   [
     body("title", "Title cannot be empty").notEmpty(),
-    body("description", "Description must be at least 5 characters long").isLength({ min: 5 }),
+    body(
+      "description",
+      "Description must be at least 5 characters long"
+    ).isLength({ min: 5 }),
   ],
   async (req, res) => {
     try {
@@ -36,16 +30,13 @@ router.post(
       if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
       }
-
       const { title, description, tag } = req.body;
-
       const note = new Notes({
         title,
         description,
-        tag,
+        tag: tag || "General",
         user: req.user.id,
       });
-
       const savedNote = await note.save();
       res.json(savedNote);
     } catch (error) {
@@ -81,7 +72,11 @@ router.put("/updatenote/:id", fetchuser, async (req, res) => {
     }
 
     // ✅ Update the note
-    note = await Notes.findByIdAndUpdate(req.params.id, { $set: newNote }, { new: true });
+    note = await Notes.findByIdAndUpdate(
+      req.params.id,
+      { $set: newNote },
+      { new: true }
+    );
 
     res.json({ success: "Note updated successfully", note });
   } catch (error) {

@@ -5,20 +5,18 @@ import Home from "./components/Home";
 import Notes from "./components/Notes";
 import NoteState from "./context/notes/NoteState";
 import "./index.css";
-import { BrowserRouter as Router, Route, Link, Routes } from "react-router-dom";
+import { Routes, Route } from 'react-router-dom';
+
 function App() {
   return (
-    <>
-      <NoteState>
-        <Header />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/notes" element={<Notes />} />
-          <Route path="/addnote" element={<AddNote />} />
-
-        </Routes>
-      </NoteState>
-    </>
+    <NoteState>
+      <Header />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/notes" element={<Notes />} />
+        <Route path="/addnote" element={<AddNote />} />
+      </Routes>
+    </NoteState>
   );
 }
 

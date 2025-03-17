@@ -1,17 +1,32 @@
 import React, { useContext } from "react";
-import { Card, CardContent, Typography, Button, Box, Chip } from "@mui/material";
+import {
+  Card,
+  CardContent,
+  Typography,
+  Button,
+  Box,
+  Chip,
+} from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import noteContext from "../context/notes/NoteContext";
 
-const NoteItem = ({ note }) => {
-  const { deleteNote } = useContext(noteContext);
-
+const NoteItem = (props) => {
+  const context = useContext(noteContext);
+  const { deleteNote } = context;
+  const { note } = props;
   return (
     <Card sx={{ boxShadow: 3, borderRadius: 2, mb: 2 }}>
       <CardContent>
         {/* Title and Tag in one row */}
-        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 1 }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            mb: 1,
+          }}
+        >
           <Typography variant="h6" color="primary">
             {note.title}
           </Typography>
