@@ -8,7 +8,7 @@ const NoteState = (props) => {
 
   // get all   notes
   const getNotes = async () => {
-    console.log("adding a new note");
+   
     const url = `${host}/api/notes/fetchallnotes`;
     // api call
     const response = await fetch(url, {
@@ -20,31 +20,41 @@ const NoteState = (props) => {
       },
     });
     const json = await response.json();
-    console.log(json);
+   
     setNotes(json);
   };
 
   // add a note
   const addNote = async (title, description, tag) => {
-    console.log("adding a new note");
+  
     const url = `${host}/api/notes/addnote`;
     // api call
-    const response = await fetch(url, {
+    const response = await fetch(`${host}/api/notes/addnote`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "auth-token":
           "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjdjYzhlZjgzNmJhZjUyZWRjZWNhNDAxIn0sImlhdCI6MTc0MTQ1OTIxMH0.180oLcOUpUOGheBLHJ8sexsPpr968Akwos2th5xKogc",
       },
-      body: JSON.stringify({ title, description, tag }),
+      body: JSON.stringify({
+        title: title,
+        description: description,
+        tag: tag,
+      }),
     });
-    const json = response.json();
+
+    const json = await response.json();
+   
+    if (!title || !description || !tag) {
+      console.error("All fields are required!");
+      return;
+    }
     const note = {
       user: "67cc8ef836baf52edceca401",
       title: title,
       description: description,
       tag: tag,
-      _id: "67d57def5e49993f9abbc650",
+      _id: json._id || Date.now().toString(),
       date: "2025-03-15T13:17:35.023Z",
       __v: 0,
     };
@@ -64,14 +74,13 @@ const NoteState = (props) => {
       },
     });
     const json = response.json();
-    console.log(json);
-
+  
     const newNotes = notes.filter((note) => {
       return note._id !== id;
     });
     setNotes(newNotes);
 
-    console.log("deleting the note with id", id);
+    
   };
 
   // edit a note
@@ -88,17 +97,22 @@ const NoteState = (props) => {
       },
       body: JSON.stringify({ title, description, tag }),
     });
-    const json = response.json();
+    const json = await response.json();
 
+    let newNotes = JSON.parse(JSON.stringify(notes));
     // logic to edit  in client
-    for (let i = 0; i < notes.length; i++) {
-      const element = notes[i];
+    for (let i = 0; i < newNotes.length; i++) {
+      const element = newNotes[i];
       if (element._id === id) {
-        element.title = title;
-        element.description = description;
-        element.tag = tag;
+        newNotes[i].title = title;
+        newNotes[i].description = description;
+        newNotes[i].tag = tag;
+        break;
       }
+     
     }
+
+    setNotes(newNotes);
   };
   return (
     <NoteContext.Provider

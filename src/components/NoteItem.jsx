@@ -11,10 +11,10 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import noteContext from "../context/notes/NoteContext";
 
-const NoteItem = (props) => {
+const NoteItem = ({ note, updateNote }) => {
   const context = useContext(noteContext);
   const { deleteNote } = context;
-  const { note } = props;
+
   return (
     <Card sx={{ boxShadow: 3, borderRadius: 2, mb: 2 }}>
       <CardContent>
@@ -45,7 +45,7 @@ const NoteItem = (props) => {
             size="small"
             startIcon={<EditIcon />}
             color="warning"
-            onClick={() => console.log("Edit clicked for:", note._id)}
+            onClick={() => updateNote(note)}
           >
             Edit
           </Button>

@@ -12,6 +12,8 @@ import {
 import noteContext from "../context/notes/NoteContext";
 
 const AddNote = () => {
+  const [error, setError] = useState("");
+
   const context = useContext(noteContext);
   const { addNote } = context;
   const [note, setNote] = useState({ title: "", description: "", tag: "default" });
@@ -22,8 +24,14 @@ const AddNote = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!note.title.trim() || !note.description.trim()) {
+      alert("Title and description cannot be empty!");
+      return;
+    }
     addNote(note.title, note.description, note.tag);
+    setNote({ title: "", description: "", tag: "default" }); // Clear form
   };
+  
 
   return (
     <Container maxWidth="sm">
@@ -72,12 +80,12 @@ const AddNote = () => {
 
       {/* Error Snackbar */}
       <Snackbar
-        // open={!!error}
+        open={!!error}
         autoHideDuration={3000}
         onClose={() => setError("")}
       >
         <Alert severity="error" onClose={() => setError("")}>
-          {/* {error} */}
+          {error}
         </Alert>
       </Snackbar>
     </Container>

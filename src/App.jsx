@@ -4,12 +4,14 @@ import Header from "./components/Header";
 import Home from "./components/Home";
 import Notes from "./components/Notes";
 import NoteState from "./context/notes/NoteState";
+
 import "./index.css";
 import { Routes, Route } from 'react-router-dom';
 
 function App() {
   return (
     <NoteState>
+     
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
