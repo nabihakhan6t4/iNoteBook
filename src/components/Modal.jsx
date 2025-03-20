@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react";
 import { Modal, Box, Typography, Button, TextField } from "@mui/material";
 import noteContext from "../context/notes/NoteContext";
 
-const BasicModalDialog = ({ open, setOpen, note: initialNote, addNote }) => {
+const BasicModalDialog = ({ open, setOpen, note: initialNote }) => {
   if (!initialNote) return null; // Don't render if no note is selected
 
   const [note, setNote] = useState({
@@ -10,30 +10,34 @@ const BasicModalDialog = ({ open, setOpen, note: initialNote, addNote }) => {
     description: initialNote?.description || "",
     tag: initialNote?.tag || "",
   });
-  
+
+  const [errors, setErrors] = useState({ title: "", tag: "" }); // Define errors state
 
   const handleChange = (e) => {
     setNote({ ...note, [e.target.name]: e.target.value });
+
+    // Clear error message when user starts typing
+    setErrors({ ...errors, [e.target.name]: "" });
   };
 
   const context = useContext(noteContext);
-  const { notes, getNotes, editNote } = context;
+  const { editNote } = context;
 
   const handleSubmit = (e) => {
     e.preventDefault();
-  
-    if (!note.title.trim() || !note.description.trim()) {
-      alert("Title and description cannot be empty!");
-      return;
+
+    let newErrors = {};
+    if (note.title.trim().length < 5) newErrors.title = "Title must be at least 5 characters long!";
+    if (note.tag.trim().length < 5) newErrors.tag = "Tag must be at least 5 characters long!";
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return; // Stop form submission if there are errors
     }
-  
-    editNote(initialNote._id, note.title, note.description, note.tag); 
 
- 
-
-    setOpen(false); // Modal close karna
+    editNote(initialNote._id, note.title, note.description, note.tag);
+    setOpen(false); // Close modal
   };
-  
 
   return (
     <Modal open={open} onClose={() => setOpen(false)}>
@@ -61,6 +65,9 @@ const BasicModalDialog = ({ open, setOpen, note: initialNote, addNote }) => {
           name="title"
           value={note.title}
           onChange={handleChange}
+          error={!!errors.title}
+          helperText={errors.title}
+          required
         />
         <TextField
           fullWidth
@@ -69,6 +76,9 @@ const BasicModalDialog = ({ open, setOpen, note: initialNote, addNote }) => {
           name="tag"
           value={note.tag}
           onChange={handleChange}
+          error={!!errors.tag}
+          helperText={errors.tag}
+          required
         />
         <TextField
           fullWidth
