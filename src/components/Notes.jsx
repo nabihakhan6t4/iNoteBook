@@ -4,24 +4,27 @@ import noteContext from "../context/notes/NoteContext";
 import NoteItem from "./NoteItem";
 import { v4 as uuidv4 } from "uuid";
 import BasicModalDialog from "./Modal";
+import { useNavigate } from "react-router-dom";
 
 const Notes = () => {
   const context = useContext(noteContext);
-  const { notes, getNotes , editNote } = context;
-
+  const { notes, getNotes, editNote } = context;
+  let navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [currentNote, setCurrentNote] = useState(null);
 
   useEffect(() => {
-    getNotes();
-  }, []);
+    if (localStorage.getItem("token")) {
+      getNotes();
+    } else {
+      navigate("/login");
+    }
+  }, [getNotes, navigate]);
 
-
-  
   // Function to open modal and set the current note
   const updateNote = (note) => {
-    setCurrentNote(note);  // Store the selected note
-    setOpen(true);         // Open modal
+    setCurrentNote(note); // Store the selected note
+    setOpen(true); // Open modal
   };
 
   return (

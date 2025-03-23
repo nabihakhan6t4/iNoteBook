@@ -12,8 +12,7 @@ import {
 import noteContext from "../context/notes/NoteContext";
 
 const AddNote = () => {
-  const [error, setError] = useState("");
-
+  const [success, setSuccess] = useState(""); // ✅ Success Alert State
   const context = useContext(noteContext);
   const { addNote } = context;
   const [note, setNote] = useState({ title: "", description: "", tag: "default" });
@@ -29,9 +28,13 @@ const AddNote = () => {
       return;
     }
     addNote(note.title, note.description, note.tag);
-    setNote({ title: "", description: "", tag: "default" }); // Clear form
+    setNote({ title: "", description: "", tag: "default" }); // ✅ Clear form
+    setSuccess("Note added successfully!"); // ✅ Show Success Alert
+
+    setTimeout(() => {
+      setSuccess(""); // ✅ Hide Alert after 3 sec
+    }, 3000);
   };
-  
 
   return (
     <Container maxWidth="sm">
@@ -71,21 +74,21 @@ const AddNote = () => {
             value={note.tag}
           />
           <Box textAlign="center" mt={2}>
-            <Button type="submit" variant="contained" color="primary">
+            <Button type="submit" variant="contained" color="primary" disabled={note.title.length < 5 || note.description.length < 5}>
               ➕ Add Note
             </Button>
           </Box>
         </form>
       </Paper>
 
-      {/* Error Snackbar */}
+      {/* ✅ Success Snackbar Alert */}
       <Snackbar
-        open={!!error}
+        open={!!success}
         autoHideDuration={3000}
-        onClose={() => setError("")}
+        onClose={() => setSuccess("")}
       >
-        <Alert severity="error" onClose={() => setError("")}>
-          {error}
+        <Alert severity="success" onClose={() => setSuccess("")}>
+          {success}
         </Alert>
       </Snackbar>
     </Container>

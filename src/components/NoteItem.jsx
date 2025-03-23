@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import {
   Card,
   CardContent,
@@ -6,7 +6,11 @@ import {
   Button,
   Box,
   Chip,
+  Snackbar,
+  Alert,
+  IconButton,
 } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import noteContext from "../context/notes/NoteContext";
@@ -15,10 +19,42 @@ const NoteItem = ({ note, updateNote }) => {
   const context = useContext(noteContext);
   const { deleteNote } = context;
 
+  const [alertMessage, setAlertMessage] = useState(""); 
+  const [alertOpen, setAlertOpen] = useState(false); 
+
+  const handleDelete = (id) => {
+    deleteNote(id);
+    setAlertMessage("Note deleted successfully!"); 
+    setAlertOpen(true);
+  };
+
   return (
-    <Card sx={{ boxShadow: 3, borderRadius: 2, mb: 2 }}>
+    <Card sx={{ boxShadow: 3, borderRadius: 2, mb: 2, p: 2 }}>
       <CardContent>
-        {/* Title and Tag in one row */}
+        {/* ✅ Show Success Alert */}
+        <Snackbar
+          open={alertOpen}
+          autoHideDuration={5000} 
+          onClose={() => setAlertOpen(false)}
+          anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        >
+          <Alert
+            severity="success"
+            action={
+              <IconButton
+                size="small"
+                color="inherit"
+                onClick={() => setAlertOpen(false)}
+              >
+                <CloseIcon fontSize="small" />
+              </IconButton>
+            }
+          >
+            {alertMessage}
+          </Alert>
+        </Snackbar>
+
+        {/* Title and Tag */}
         <Box
           sx={{
             display: "flex",
@@ -45,7 +81,7 @@ const NoteItem = ({ note, updateNote }) => {
             size="small"
             startIcon={<EditIcon />}
             color="warning"
-            onClick={() => updateNote(note)}
+            onClick={() => updateNote(note)} // ✅ Call Edit Function
           >
             Edit
           </Button>
@@ -54,7 +90,7 @@ const NoteItem = ({ note, updateNote }) => {
             size="small"
             startIcon={<DeleteIcon />}
             color="error"
-            onClick={() => deleteNote(note._id)}
+            onClick={() => handleDelete(note._id)} // ✅ Call Delete Function
           >
             Delete
           </Button>

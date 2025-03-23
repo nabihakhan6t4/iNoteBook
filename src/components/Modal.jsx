@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { Modal, Box, Typography, Button, TextField } from "@mui/material";
+import { Modal, Box, Typography, Button, TextField, Snackbar, Alert } from "@mui/material";
 import noteContext from "../context/notes/NoteContext";
 
 const BasicModalDialog = ({ open, setOpen, note: initialNote }) => {
@@ -11,12 +11,12 @@ const BasicModalDialog = ({ open, setOpen, note: initialNote }) => {
     tag: initialNote?.tag || "",
   });
 
-  const [errors, setErrors] = useState({ title: "", tag: "" }); // Define errors state
+  const [errors, setErrors] = useState({ title: "", tag: "" });
+  const [alertOpen, setAlertOpen] = useState(false); // ✅ Snackbar State
+  const [alertMessage, setAlertMessage] = useState(""); // ✅ Alert Message
 
   const handleChange = (e) => {
     setNote({ ...note, [e.target.name]: e.target.value });
-
-    // Clear error message when user starts typing
     setErrors({ ...errors, [e.target.name]: "" });
   };
 
@@ -27,16 +27,23 @@ const BasicModalDialog = ({ open, setOpen, note: initialNote }) => {
     e.preventDefault();
 
     let newErrors = {};
-    if (note.title.trim().length < 5) newErrors.title = "Title must be at least 5 characters long!";
-    if (note.tag.trim().length < 5) newErrors.tag = "Tag must be at least 5 characters long!";
+    if (note.title.trim().length < 5)
+      newErrors.title = "Title must be at least 5 characters long!";
+    if (note.tag.trim().length < 5)
+      newErrors.tag = "Tag must be at least 5 characters long!";
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
-      return; // Stop form submission if there are errors
+      return;
     }
 
     editNote(initialNote._id, note.title, note.description, note.tag);
-    setOpen(false); // Close modal
+    setAlertMessage("Note updated successfully!"); // ✅ Show success alert
+    setAlertOpen(true);
+
+    setTimeout(() => {
+      setOpen(false); // Close modal
+    }, 3000);
   };
 
   return (
@@ -57,6 +64,17 @@ const BasicModalDialog = ({ open, setOpen, note: initialNote }) => {
         <Typography variant="h6" component="h2">
           Edit Note
         </Typography>
+
+        {/* ✅ Snackbar Alert */}
+        <Snackbar
+          open={alertOpen}
+          autoHideDuration={3000}
+          onClose={() => setAlertOpen(false)}
+        >
+          <Alert severity="success" onClose={() => setAlertOpen(false)}>
+            {alertMessage}
+          </Alert>
+        </Snackbar>
 
         <TextField
           fullWidth
@@ -97,6 +115,11 @@ const BasicModalDialog = ({ open, setOpen, note: initialNote }) => {
           fullWidth
           sx={{ mt: 2 }}
           onClick={handleSubmit}
+          disabled={
+            note.title.trim().length < 5 ||
+            note.tag.trim().length < 3 ||
+            note.description.trim().length < 10
+          }
         >
           Save Changes
         </Button>

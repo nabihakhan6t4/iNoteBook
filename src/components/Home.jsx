@@ -11,12 +11,27 @@ import {
 } from "@mui/material";
 import Notes from "./Notes";
 import AddNote from "./AddNote";
-
+import { useEffect } from "react";
+import noteContext from "../context/notes/NoteContext";
+import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 const Home = () => {
+  const context = useContext(noteContext);
+let navigate = useNavigate()
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [noteTitle, setNoteTitle] = useState("");
   const [noteDescription, setNoteDescription] = useState("");
+  const { getNotes } = context;
+
+  useEffect(() => {
+    if (!localStorage.getItem("token")) {  
+      navigate("/login");  // ✅ Ab sirf non-logged-in users ko login page pr bheje ga
+    } else {
+      getNotes();  // ✅ Notes sirf jab user logged in hoga tab fetch honge
+    }
+  }, []);
+  
 
   // Handle Login
   const handleLogin = (e) => {
