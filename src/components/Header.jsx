@@ -1,6 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { AppBar, Toolbar, Typography, Button, IconButton, Box, Drawer, List, ListItem, ListItemText } from "@mui/material";
-import { Link, useLocation, useNavigate } from "react-router-dom"; 
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Button,
+  IconButton,
+  Box,
+  Drawer,
+  List,
+  ListItem,
+  ListItemText,
+} from "@mui/material";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import MenuIcon from "@mui/icons-material/Menu";
 
 const Header = () => {
@@ -17,9 +28,9 @@ const Header = () => {
     setMobileOpen(!mobileOpen);
   };
 
-  const handleLogout = () => {  
-    localStorage.removeItem('token');
-    navigate('/login'); 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
   };
 
   // Drawer Content
@@ -28,11 +39,6 @@ const Header = () => {
       <List>
         <ListItem button component={Link} to="/">
           <ListItemText primary="Home" />
-        </ListItem>
-        
-        
-        <ListItem button component={Link} to="/profile">
-          <ListItemText primary="Profile" />
         </ListItem>
 
         {!localStorage.getItem("token") ? (
@@ -45,9 +51,14 @@ const Header = () => {
             </ListItem>
           </>
         ) : (
-          <ListItem button onClick={handleLogout}>
-            <ListItemText primary="Logout" />
-          </ListItem>
+          <>
+            <ListItem button component={Link} to="/profile">
+              <ListItemText primary="Profile" />
+            </ListItem>
+            <ListItem button onClick={handleLogout}>
+              <ListItemText primary="Logout" />
+            </ListItem>
+          </>
         )}
       </List>
     </Box>
@@ -64,22 +75,53 @@ const Header = () => {
           </Typography>
 
           <Box sx={{ display: { xs: "none", md: "flex" }, gap: 2 }}>
-            <Button color={location.pathname === "/" ? "secondary" : "inherit"} component={Link} to="/">Home</Button>
-           
-            <Button color={location.pathname === "/about" ? "secondary" : "inherit"} component={Link} to="/about">About</Button>
-            <Button color={location.pathname === "/profile" ? "secondary" : "inherit"} component={Link} to="/profile">Profile</Button>
+            <Button
+              color={location.pathname === "/" ? "secondary" : "inherit"}
+              component={Link}
+              to="/"
+            >
+              Home
+            </Button>
+
+            <Button
+              color={location.pathname === "/about" ? "secondary" : "inherit"}
+              component={Link}
+              to="/about"
+            >
+              About
+            </Button>
           </Box>
 
           {!localStorage.getItem("token") ? (
             <>
-              <Button color="success" component={Link} to="/login">Login</Button>
-              <Button color="primary" component={Link} to="/signup">Signup</Button>
+              <Button color="success" component={Link} to="/login">
+                Login
+              </Button>
+              <Button color="primary" component={Link} to="/signup">
+                Signup
+              </Button>
             </>
           ) : (
-            <Button color="error" onClick={handleLogout}>Logout</Button>
+            <>
+              <Button
+                color={
+                  location.pathname === "/profile" ? "secondary" : "inherit"
+                }
+                component={Link}
+                to="/profile"
+              >
+                Profile
+              </Button>
+              <Button color="error" onClick={handleLogout}>
+                Logout
+              </Button>
+            </>
           )}
 
-          <IconButton sx={{ display: { xs: "block", md: "none" }, color: "white" }} onClick={handleDrawerToggle}>
+          <IconButton
+            sx={{ display: { xs: "block", md: "none" }, color: "white" }}
+            onClick={handleDrawerToggle}
+          >
             <MenuIcon />
           </IconButton>
         </Toolbar>

@@ -7,6 +7,7 @@ import NoteState from "./context/notes/NoteState";
 
 import "./index.css";
 import { Routes, Route } from "react-router-dom";
+import Profile from "./components/Profile";
 
 function App() {
   return (
@@ -15,7 +16,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
-
+        <Route path="/profile" element={<Profile />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
       </Routes>
