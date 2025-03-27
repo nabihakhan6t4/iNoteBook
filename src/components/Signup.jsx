@@ -41,7 +41,7 @@ const Signup = () => {
       return;
     }
 
-    const url = `http://localhost:5000/api/auth/createuser`;
+    const url = `https://backend-ten-lovat-99.vercel.app/api/auth/createuser`;
     try {
       const response = await fetch(url, {
         method: "POST",
