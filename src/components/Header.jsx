@@ -13,7 +13,6 @@ import {
 } from "@mui/material";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import MenuIcon from "@mui/icons-material/Menu";
-
 const Header = () => {
   const location = useLocation();
   const navigate = useNavigate(); // Yahan useNavigate hook ko sahi jagah initialize kiya
@@ -40,6 +39,9 @@ const Header = () => {
         <ListItem button component={Link} to="/">
           <ListItemText primary="Home" />
         </ListItem>
+        <ListItem button component={Link} to="/about">
+          <ListItemText primary="About" />
+        </ListItem>
 
         {!localStorage.getItem("token") ? (
           <>
@@ -52,6 +54,10 @@ const Header = () => {
           </>
         ) : (
           <>
+            <ListItem button component={Link} to="/notes">
+
+              <ListItemText primary="My Notes Page" />
+            </ListItem>
             <ListItem button component={Link} to="/profile">
               <ListItemText primary="Profile" />
             </ListItem>
@@ -103,6 +109,13 @@ const Header = () => {
             </>
           ) : (
             <>
+              <Button
+                color={location.pathname === "/notes" ? "secondary" : "inherit"}
+                component={Link}
+                to="/notes"
+              >
+                My Notes Page
+              </Button>
               <Button
                 color={
                   location.pathname === "/profile" ? "secondary" : "inherit"

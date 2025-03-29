@@ -8,6 +8,7 @@ import NoteState from "./context/notes/NoteState";
 import "./index.css";
 import { Routes, Route } from "react-router-dom";
 import Profile from "./components/Profile";
+import Notes from "./components/Notes";
 
 function App() {
   return (
@@ -19,6 +20,8 @@ function App() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/notes" element={<Notes />} />
+
       </Routes>
     </NoteState>
   );
