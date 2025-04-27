@@ -1,5 +1,7 @@
 const jwt = require("jsonwebtoken");
-const JWT_SECRET = "NABIHAISGOOD";
+
+
+const JWT_SECRET = process.env.JWT_SECRET;
 
 const fetchuser = (req, res, next) => {
   const token = req.header("Authorization")?.split(" ")[1] || req.header("auth-token");
@@ -16,5 +18,3 @@ const fetchuser = (req, res, next) => {
 };
 
 module.exports = fetchuser;
-
-

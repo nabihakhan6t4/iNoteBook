@@ -5,6 +5,7 @@ import NoteItem from "./NoteItem";
 import { v4 as uuidv4 } from "uuid";
 import BasicModalDialog from "./Modal";
 import { useNavigate } from "react-router-dom";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 const Notes = () => {
   const context = useContext(noteContext);
